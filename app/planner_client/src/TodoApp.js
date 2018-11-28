@@ -11,7 +11,7 @@ class DayPlannerApp extends Component {
 
   state = {
     todos: [
-      {title: 'take out trash'}
+      {title: 'take out trash', completed: false }
     ]
   }
 
@@ -26,6 +26,14 @@ class DayPlannerApp extends Component {
     const {todos} = this.state;
     const newTodos = todos.filter(t => t !== todo)
     this.setState({todos: newTodos})
+  }
+
+  handleCompletion = (todo) => {
+    const {todos} = this.state;
+    const targetTodo = Object.assign({}, todo)
+    targetTodo.completed = true;
+    todos[todos.indexOf(todo)] = targetTodo
+    this.setState({todos})
   }
 
   render() {
@@ -43,7 +51,8 @@ class DayPlannerApp extends Component {
 
           <NewTodo onSave={this.handleSave} />
           <TodoList todos={this.state.todos}
-                    onDelete={this.handleDeletion}/>
+                    onDelete={this.handleDeletion}
+                    onCompletion={this.handleCompletion}/>
       </div>
     );
   }

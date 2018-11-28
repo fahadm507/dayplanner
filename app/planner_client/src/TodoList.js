@@ -6,16 +6,17 @@ class TodoList extends Component {
     onDelete(){}
   }
 
-  handleDelete = (todo, e) => {
-    e.preventDefault()
-    console.log("item to delete is: ",todo, this)
-    this.props.onDelete(todo)
-  }
-  
   render(){
-    const todos = this.props.todos.map((todo, i) => (
-      <li key={i}>{todo.title}<button onClick={(e) => this.handleDelete(todo, e)}>Delete</button></li>
-    ));
+    const todos = this.props.todos.map((todo, i) => {
+      let markAsDone = todo.completed ? {textDecoration: 'line-through'} : {textDecoration: 'none'};
+      return <li key={i} style={markAsDone}>
+        {todo.title}
+        <button  onClick={() => this.props.onDelete(todo)}>Delete</button>
+
+        {!todo.completed && <button onClick={() => this.props.onCompletion(todo)}>Done</button>}
+
+      </li>
+    });
 
     return(
       <ul>{todos}</ul>
