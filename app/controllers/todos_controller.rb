@@ -22,7 +22,7 @@ class TodosController < ApplicationController
   # PUT /todos/:id
   def update
     @todo.update(todo_params)
-    head :no_content
+    json_response(@todo, :ok)
   end
 
   # DELETE /todos/:id
@@ -35,7 +35,7 @@ class TodosController < ApplicationController
 
   def todo_params
     # whitelist params
-    params.permit(:title, :created_by)
+    params.permit(:title, :created_by, :id, :created_at, :updated_at, :completed)
   end
 
   def set_todo
