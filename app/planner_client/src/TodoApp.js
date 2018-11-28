@@ -9,31 +9,69 @@ class DayPlannerApp extends Component {
     onSave(){}
   }
 
-  state = {
-    todos: [
-      {title: 'take out trash', completed: false }
-    ]
+  state = {todos: []}
+
+  componentDidMount(){
+    fetch('/todos')
+      .then(res => res.json())
+      .then(data => this.setState({todos: data}))
+      .catch(error => {
+        return error.message
+      })
   }
 
   handleSave = (formData) => {
-    const todos = [...this.state.todos, formData.todo];
-    this.setState({
-      todos
-    })
+      fetch('/todos', {
+        method: 'POST',
+        headers:{
+          'Accept':'application/json',
+          'Content-Type':'application/json'
+        },
+        body: JSON.stringify(formData.todo)
+      })
+      .then(res => res.json())
+      .then(data => {
+        const todos = [...this.state.todos, formData.todo];
+        return this.setState({todos: todos})
+      })
+      .catch(error => {
+        console.log("an error occured", error)
+      })
   }
 
   handleDeletion = (todo) => {
     const {todos} = this.state;
     const newTodos = todos.filter(t => t !== todo)
-    this.setState({todos: newTodos})
+    fetch(`/todos/${todo.id}`, {
+      method: 'DELETE'
+    }
+  ).then(res => res).then(data => {
+    return this.setState({
+      todos: newTodos
+    })
+  })
+
   }
 
   handleCompletion = (todo) => {
     const {todos} = this.state;
-    const targetTodo = Object.assign({}, todo)
-    targetTodo.completed = true;
-    todos[todos.indexOf(todo)] = targetTodo
-    this.setState({todos})
+    todo.completed = true;
+      fetch(`/todos/${todo.id}`, {
+        method: 'PUT',
+        headers:{
+          'Accept':'application/json',
+          'Content-Type':'application/json'
+        },
+        body: JSON.stringify(todo)
+      })
+      .then(res => res.json())
+      .then(data => {
+        todos[todos.indexOf(todo)] = data
+        return this.setState({todos: todos})
+      })
+      .catch(error => {
+        console.log("an error occured", error.message)
+      })
   }
 
   render() {

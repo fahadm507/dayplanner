@@ -12,14 +12,12 @@ class TodoList extends Component {
       return <li key={i} style={markAsDone}>
         {todo.title}
         <button  onClick={() => this.props.onDelete(todo)}>Delete</button>
-
         {!todo.completed && <button onClick={() => this.props.onCompletion(todo)}>Done</button>}
-
       </li>
     });
 
     return(
-      <ul>{todos}</ul>
+      <ol>{todos}</ol>
     )
   }
 }
